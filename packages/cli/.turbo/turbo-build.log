@@ -1,0 +1,13 @@
+
+> @ophillia/cli@1.0.0 build C:\Users\abhin\Desktop\ophillia-headless-cms\packages\cli
+> tsup src/index.ts --format cjs --dts
+
+[34mCLI[39m Building entry: src/index.ts
+[34mCLI[39m tsup v8.5.1
+[34mCLI[39m Target: node16
+[34mCJS[39m Build start
+[32mCJS[39m [1mdist\index.js [22m[32m74.00 B[39m
+[32mCJS[39m ⚡️ Build success in 908ms
+[34mDTS[39m Build start
+[32mDTS[39m ⚡️ Build success in 9097ms
+[32mDTS[39m [1mdist\index.d.ts [22m[32m20.00 B[39m

@@ -1,0 +1,19 @@
+{
+  "name": "@ophillia/site",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev --port 3000",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@ophillia/sdk": "workspace:*",
+    "nuxt": "^4.3.1",
+    "vue": "^3.5.29",
+    "vue-router": "^4.6.4"
+  }
+}

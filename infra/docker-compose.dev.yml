@@ -1,0 +1,17 @@
+services:
+  pocketbase:
+    build:
+      context: ../backend/pocketbase
+      dockerfile: Dockerfile
+    ports:
+      - "8090:8090"
+    volumes:
+      - ../backend/pocketbase/pb_data:/pb/pb_data
+      - ../backend/pocketbase/pb_migrations:/pb/pb_migrations
+      - ../backend/pocketbase/pb_hooks:/pb/pb_hooks
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8090/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: unless-stopped
