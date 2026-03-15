@@ -19,6 +19,13 @@ export const useProjectStore = defineStore('project', () => {
             if (!currentProject.value && result.items.length === 1) {
                 setCurrentProject(result.items[0]);
             }
+        } catch (err: any) {
+            // Surface auth errors (401/403) so callers can redirect to login
+            if (err?.status === 401 || err?.status === 403) {
+                throw err;
+            }
+            // For other errors, log and leave projects empty
+            console.error('[project store] fetchProjects failed:', err);
         } finally {
             loading.value = false;
         }

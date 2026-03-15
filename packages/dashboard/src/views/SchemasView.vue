@@ -7,14 +7,14 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter
 } from '@/components/ui/dialog'
 import {
   Select, SelectContent, SelectItem, SelectTrigger, SelectValue
 } from '@/components/ui/select'
-import { Loader2, Plus, Trash2, Pencil } from 'lucide-vue-next'
+import { Loader2, Plus, Trash2, Pencil, Layers } from 'lucide-vue-next'
 
 const route = useRoute()
 const projectId = route.params.projectId as string
@@ -176,31 +176,87 @@ async function saveSchema() {
       <Loader2 class="h-6 w-6 animate-spin text-muted-foreground" />
     </div>
 
-    <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      <p v-if="!schemas.length" class="text-sm text-muted-foreground col-span-full py-8 text-center">
-        No schemas defined. Create your first schema.
-      </p>
-      <Card v-for="schema in schemas" :key="schema.id">
-        <CardHeader class="pb-2 flex flex-row items-start justify-between">
-          <div>
-            <CardTitle class="text-sm">{{ schema.name }}</CardTitle>
-            <code class="text-xs text-muted-foreground">{{ schema.slug }}</code>
-          </div>
-          <div class="flex gap-1">
-            <Button variant="ghost" size="icon" class="h-7 w-7" @click="openEdit(schema)">
-              <Pencil class="h-3.5 w-3.5" />
-            </Button>
-          </div>
-        </CardHeader>
-        <CardContent class="space-y-1.5">
-          <Badge :variant="schema.status === 'active' ? 'default' : 'secondary'" class="text-xs">{{ schema.status }}</Badge>
-          <div class="flex flex-wrap gap-1 mt-2">
-            <Badge v-for="field in schema.fields_schema" :key="field.name" variant="outline" class="text-xs">
-              {{ field.name }}: {{ field.type }}
+    <div v-else>
+      <!-- Empty state -->
+      <div
+        v-if="!schemas.length"
+        class="flex flex-col items-center justify-center py-20 text-center border-2 border-dashed rounded-xl"
+      >
+        <div class="rounded-full bg-muted p-4 mb-4">
+          <Layers class="h-8 w-8 text-muted-foreground opacity-40" />
+        </div>
+        <h3 class="text-sm font-semibold mb-1">No schemas yet</h3>
+        <p class="text-sm text-muted-foreground mb-5 max-w-xs">
+          Create your first schema to define the structure of content sections.
+        </p>
+        <Button size="sm" @click="dialogOpen = true">
+          <Plus class="h-3.5 w-3.5 mr-1.5" />New Schema
+        </Button>
+      </div>
+
+      <!-- Schema card grid -->
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <article
+          v-for="schema in schemas"
+          :key="schema.id"
+          class="relative flex flex-col gap-3 rounded-xl border bg-card p-5 shadow-sm hover:shadow-md hover:border-primary/40 transition-all duration-200 overflow-hidden"
+        >
+          <!-- Status strip -->
+          <div
+            class="absolute inset-y-0 left-0 w-1"
+            :class="schema.status === 'active' ? 'bg-emerald-500' : 'bg-zinc-400'"
+          />
+
+          <div class="pl-3 flex flex-col gap-3 flex-1">
+            <!-- Top row: name + edit button -->
+            <div class="flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <h2 class="font-semibold text-sm leading-snug truncate" :title="schema.name">
+                  {{ schema.name }}
+                </h2>
+                <code class="text-xs text-muted-foreground mt-0.5 block truncate">{{ schema.slug }}</code>
+              </div>
+              <Button
+                variant="ghost"
+                size="icon"
+                class="h-7 w-7 shrink-0 text-muted-foreground hover:text-foreground"
+                @click="openEdit(schema)"
+              >
+                <Pencil class="h-3.5 w-3.5" />
+              </Button>
+            </div>
+
+            <!-- Status badge -->
+            <Badge
+              class="w-fit capitalize text-[11px] px-2 py-0 border"
+              :class="schema.status === 'active'
+                ? 'bg-emerald-500/10 text-emerald-700 border-emerald-300 dark:text-emerald-400 dark:border-emerald-800'
+                : 'bg-zinc-500/10 text-zinc-600 border-zinc-300 dark:text-zinc-400 dark:border-zinc-700'"
+            >
+              {{ schema.status }}
             </Badge>
+
+            <!-- Divider -->
+            <div class="border-t" />
+
+            <!-- Fields -->
+            <div>
+              <p class="text-[10px] uppercase tracking-wide font-semibold text-muted-foreground mb-1.5">Fields</p>
+              <div v-if="schema.fields_schema?.length" class="flex flex-wrap gap-1">
+                <Badge
+                  v-for="field in schema.fields_schema"
+                  :key="field.name"
+                  variant="outline"
+                  class="text-[10px] px-1.5 py-0 font-mono"
+                >
+                  {{ field.name }}<span class="text-muted-foreground ml-1">{{ field.type }}</span>
+                </Badge>
+              </div>
+              <p v-else class="text-xs text-muted-foreground">No fields defined</p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </article>
+      </div>
     </div>
   </div>
 </template>

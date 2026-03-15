@@ -32,7 +32,7 @@ async function request<T>(
     };
 
     if (token) {
-        headers['Authorization'] = token;
+        headers['Authorization'] = `Bearer ${token}`;
     }
 
     const response = await fetch(url, {
@@ -42,10 +42,11 @@ async function request<T>(
 
     if (!response.ok) {
         const body = await response.json().catch(() => ({}));
-        const err: ApiError = {
+        const err: ApiError & { rawData?: any } = {
             code: `HTTP_${response.status}`,
             message: body?.message ?? response.statusText,
             status: response.status,
+            rawData: body,
         };
         throw err;
     }
@@ -72,7 +73,7 @@ export const api = {
     upload: <T>(path: string, formData: FormData) => {
         const token = localStorage.getItem('pb_token');
         const headers: Record<string, string> = {};
-        if (token) headers['Authorization'] = token;
+        if (token) headers['Authorization'] = `Bearer ${token}`;
         return request<T>(`${PB_URL}${path}`, { method: 'POST', body: formData, headers });
     },
 };

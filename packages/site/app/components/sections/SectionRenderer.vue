@@ -6,6 +6,12 @@ import type { PBSection } from '~/composables/useOphilliaPage'
 import HeroBanner from './HeroBanner.vue'
 import RichTextBlock from './RichTextBlock.vue'
 import FallbackSection from './FallbackSection.vue'
+import AvsHero from './AvsHero.vue'
+import AvsStats from './AvsStats.vue'
+import AvsAbout from './AvsAbout.vue'
+import AvsPrograms from './AvsPrograms.vue'
+import AvsDonate from './AvsDonate.vue'
+import AvsFooter from './AvsFooter.vue'
 
 interface Schema {
     slug: string
@@ -22,6 +28,12 @@ const props = defineProps<{
 const componentMap: Record<string, unknown> = {
     'hero-banner': HeroBanner,
     'rich-text-block': RichTextBlock,
+    'avs-hero': AvsHero,
+    'avs-stats': AvsStats,
+    'avs-about': AvsAbout,
+    'avs-programs': AvsPrograms,
+    'avs-donate': AvsDonate,
+    'avs-footer': AvsFooter,
 }
 
 const resolvedComponent = computed(() =>

@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router'
 import { projectsApi } from '@/api/projects'
 import type { Project } from '@/api/projects'
 import { useProjectStore } from '@/stores/project'
+import { useAuthStore } from '@/stores/auth'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
@@ -12,15 +13,26 @@ import { Loader2, Plus, FolderOpen, ArrowRight } from 'lucide-vue-next'
 
 const router = useRouter()
 const projectStore = useProjectStore()
+const authStore = useAuthStore()
 
 const projects = ref<Project[]>([])
 const loading = ref(true)
 const search = ref('')
 
 onMounted(async () => {
-  await projectStore.fetchProjects()
-  projects.value = projectStore.projects
-  loading.value = false
+  try {
+    await projectStore.fetchProjects()
+    projects.value = projectStore.projects
+  } catch (err: any) {
+    if (err?.status === 401 || err?.status === 403) {
+      // Token is expired or invalid — force re-login
+      authStore.logout()
+      router.replace({ name: 'login' })
+      return
+    }
+  } finally {
+    loading.value = false
+  }
 })
 
 const filtered = computed(() =>
