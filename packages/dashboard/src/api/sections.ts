@@ -34,4 +34,18 @@ export const sectionsApi = {
             )
         );
     },
+    async publishAll(sectionIds: string[]): Promise<void> {
+        await Promise.all(
+            sectionIds.map(id =>
+                api.patch(`/api/collections/sections/records/${id}`, { status: 'published' })
+            )
+        );
+    },
+    async unpublishAll(sectionIds: string[]): Promise<void> {
+        await Promise.all(
+            sectionIds.map(id =>
+                api.patch(`/api/collections/sections/records/${id}`, { status: 'draft' })
+            )
+        );
+    },
 };

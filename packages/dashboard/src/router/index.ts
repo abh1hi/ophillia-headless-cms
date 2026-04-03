@@ -45,6 +45,16 @@ const router = createRouter({
           component: () => import('@/views/SchemasView.vue'),
         },
         {
+          path: 'projects/:projectId/schemas/new',
+          name: 'schema-new',
+          component: () => import('@/views/SchemaEditorView.vue'),
+        },
+        {
+          path: 'projects/:projectId/schemas/:schemaId/edit',
+          name: 'schema-edit',
+          component: () => import('@/views/SchemaEditorView.vue'),
+        },
+        {
           path: 'projects/:projectId/media',
           name: 'media',
           component: () => import('@/views/MediaView.vue'),

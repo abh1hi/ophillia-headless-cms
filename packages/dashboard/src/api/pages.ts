@@ -40,4 +40,9 @@ export const pagesApi = {
             published_at: new Date().toISOString(),
         });
     },
+    unpublish(id: string): Promise<Page> {
+        return api.patch(`/api/collections/pages/records/${id}`, {
+            status: 'draft',
+        });
+    },
 };

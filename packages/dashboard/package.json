@@ -17,6 +17,15 @@
     "format": "prettier --write --experimental-cli src/"
   },
   "dependencies": {
+    "monaco-editor": "^0.55.1",
+    "@tailwindcss/typography": "^0.5.19",
+    "@tiptap/core": "^3.22.1",
+    "@tiptap/extension-image": "^3.22.1",
+    "@tiptap/extension-link": "^3.22.1",
+    "@tiptap/extension-table": "^3.22.1",
+    "@tiptap/extension-table-cell": "^3.22.1",
+    "@tiptap/extension-table-header": "^3.22.1",
+    "@tiptap/extension-table-row": "^3.22.1",
     "@tiptap/pm": "^3.20.0",
     "@tiptap/starter-kit": "^3.20.0",
     "@tiptap/vue-3": "^3.20.0",

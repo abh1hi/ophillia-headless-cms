@@ -4,10 +4,12 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import RichTextEditor from '@/components/RichTextEditor.vue'
+import JsonEditorDrawer from '@/components/JsonEditorDrawer.vue'
+import CodeFieldEditor from '@/components/CodeFieldEditor.vue'
 
 export interface FieldSchema {
   name: string
-  type: 'text' | 'richtext' | 'number' | 'boolean' | 'image' | 'url' | 'select' | 'json'
+  type: 'text' | 'richtext' | 'number' | 'boolean' | 'image' | 'url' | 'select' | 'json' | 'markdown' | 'html' | 'yaml'
   required: boolean
   options?: Record<string, unknown>
 }
@@ -103,12 +105,31 @@ function updateField(name: string, value: unknown) {
         </Select>
       </template>
 
+      <!-- JSON Editor Drawer (Monaco Code Editor) -->
+      <template v-else-if="field.type === 'json'">
+        <JsonEditorDrawer
+          :model-value="((modelValue[field.name] as Record<string, unknown>) ?? {})"
+          :field-name="field.name"
+          @update:model-value="updateField(field.name, $event)"
+        />
+      </template>
+
+      <!-- Code Fields (Markdown, HTML, YAML) -->
+      <template v-else-if="['markdown', 'html', 'yaml'].includes(field.type)">
+        <CodeFieldEditor
+          :model-value="(modelValue[field.name] as string) || ''"
+          :language="field.type as any"
+          :label="field.name"
+          @update:model-value="updateField(field.name, $event)"
+        />
+      </template>
+
       <!-- Text, URL, Image fall back to text inputs -->
       <template v-else>
         <Input 
           :id="field.name" 
           :type="field.type === 'url' ? 'url' : 'text'" 
-          :model-value="(modelValue[field.name] as string) || ''" 
+          :model-value="typeof modelValue[field.name] === 'object' ? JSON.stringify(modelValue[field.name]) : ((modelValue[field.name] as string) || '')" 
           @update:model-value="updateField(field.name, $event)"
         />
       </template>
